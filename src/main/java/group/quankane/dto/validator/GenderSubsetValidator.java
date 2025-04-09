@@ -1,5 +1,6 @@
-package group.quankane.util;
+package group.quankane.dto.validator;
 
+import group.quankane.util.Gender;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

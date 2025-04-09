@@ -1,0 +1,884 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API Document",
+    "description": "API documents",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://springdoc.org"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://test.api-service.local"
+    }
+  ],
+  "paths": {
+    "/user/{userId}": {
+      "get": {
+        "tags": [
+          "User Controller"
+        ],
+        "summary": "Get user detail",
+        "description": "API get user detail",
+        "operationId": "getUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDataUserRequestDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Handle exception when the data invalid. (@RequestBody, @RequestParam, @PathVariable)": {
+                    "summary": "Handle Bad Request",
+                    "description": "Handle exception when the data invalid. (@RequestBody, @RequestParam, @PathVariable)",
+                    "value": {
+                      "timestamp": "2024-04-07T11:38:56.368+00:00",
+                      "status": 400,
+                      "path": "/api/v1/...",
+                      "error": "Invalid Payload",
+                      "message": "{data} must be not blank"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "404 Response": {
+                    "summary": "Handle exception when resource not found",
+                    "description": "404 Response",
+                    "value": {
+                      "timestamp": "2023-10-19T06:07:35.321+00:00",
+                      "status": 404,
+                      "path": "/api/v1/...",
+                      "error": "Not Found",
+                      "message": "{data} not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "409 Response": {
+                    "summary": "Handle exception when input data is conflicted",
+                    "description": "409 Response",
+                    "value": {
+                      "timestamp": "2023-10-19T06:07:35.321+00:00",
+                      "status": 409,
+                      "path": "/api/v1/...",
+                      "error": "Conflict",
+                      "message": "{data} exists, Please try again!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "500 Response": {
+                    "summary": "Handle exception when internal server error",
+                    "description": "500 Response",
+                    "value": {
+                      "timestamp": "2023-10-19T06:35:52.333+00:00",
+                      "status": 500,
+                      "path": "/api/v1/...",
+                      "error": "Internal Server Error",
+                      "message": "Connection timeout, please try again"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "User Controller"
+        ],
+        "summary": "Update user",
+        "description": "API update user",
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDataObject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Handle exception when the data invalid. (@RequestBody, @RequestParam, @PathVariable)": {
+                    "summary": "Handle Bad Request",
+                    "description": "Handle exception when the data invalid. (@RequestBody, @RequestParam, @PathVariable)",
+                    "value": {
+                      "timestamp": "2024-04-07T11:38:56.368+00:00",
+                      "status": 400,
+                      "path": "/api/v1/...",
+                      "error": "Invalid Payload",
+                      "message": "{data} must be not blank"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "404 Response": {
+                    "summary": "Handle exception when resource not found",
+                    "description": "404 Response",
+                    "value": {
+                      "timestamp": "2023-10-19T06:07:35.321+00:00",
+                      "status": 404,
+                      "path": "/api/v1/...",
+                      "error": "Not Found",
+                      "message": "{data} not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "409 Response": {
+                    "summary": "Handle exception when input data is conflicted",
+                    "description": "409 Response",
+                    "value": {
+                      "timestamp": "2023-10-19T06:07:35.321+00:00",
+                      "status": 409,
+                      "path": "/api/v1/...",
+                      "error": "Conflict",
+                      "message": "{data} exists, Please try again!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "500 Response": {
+                    "summary": "Handle exception when internal server error",
+                    "description": "500 Response",
+                    "value": {
+                      "timestamp": "2023-10-19T06:35:52.333+00:00",
+                      "status": 500,
+                      "path": "/api/v1/...",
+                      "error": "Internal Server Error",
+                      "message": "Connection timeout, please try again"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User Controller"
+        ],
+        "summary": "Delete user",
+        "description": "API delete user",
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDataObject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Handle exception when the data invalid. (@RequestBody, @RequestParam, @PathVariable)": {
+                    "summary": "Handle Bad Request",
+                    "description": "Handle exception when the data invalid. (@RequestBody, @RequestParam, @PathVariable)",
+                    "value": {
+                      "timestamp": "2024-04-07T11:38:56.368+00:00",
+                      "status": 400,
+                      "path": "/api/v1/...",
+                      "error": "Invalid Payload",
+                      "message": "{data} must be not blank"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "404 Response": {
+                    "summary": "Handle exception when resource not found",
+                    "description": "404 Response",
+                    "value": {
+                      "timestamp": "2023-10-19T06:07:35.321+00:00",
+                      "status": 404,
+                      "path": "/api/v1/...",
+                      "error": "Not Found",
+                      "message": "{data} not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "409 Response": {
+                    "summary": "Handle exception when input data is conflicted",
+                    "description": "409 Response",
+                    "value": {
+                      "timestamp": "2023-10-19T06:07:35.321+00:00",
+                      "status": 409,
+                      "path": "/api/v1/...",
+                      "error": "Conflict",
+                      "message": "{data} exists, Please try again!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "500 Response": {
+                    "summary": "Handle exception when internal server error",
+                    "description": "500 Response",
+                    "value": {
+                      "timestamp": "2023-10-19T06:35:52.333+00:00",
+                      "status": 500,
+                      "path": "/api/v1/...",
+                      "error": "Internal Server Error",
+                      "message": "Connection timeout, please try again"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "User Controller"
+        ],
+        "summary": "Change status of user",
+        "description": "API change user status",
+        "operationId": "updateStatus",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDataObject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Handle exception when the data invalid. (@RequestBody, @RequestParam, @PathVariable)": {
+                    "summary": "Handle Bad Request",
+                    "description": "Handle exception when the data invalid. (@RequestBody, @RequestParam, @PathVariable)",
+                    "value": {
+                      "timestamp": "2024-04-07T11:38:56.368+00:00",
+                      "status": 400,
+                      "path": "/api/v1/...",
+                      "error": "Invalid Payload",
+                      "message": "{data} must be not blank"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "404 Response": {
+                    "summary": "Handle exception when resource not found",
+                    "description": "404 Response",
+                    "value": {
+                      "timestamp": "2023-10-19T06:07:35.321+00:00",
+                      "status": 404,
+                      "path": "/api/v1/...",
+                      "error": "Not Found",
+                      "message": "{data} not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "409 Response": {
+                    "summary": "Handle exception when input data is conflicted",
+                    "description": "409 Response",
+                    "value": {
+                      "timestamp": "2023-10-19T06:07:35.321+00:00",
+                      "status": 409,
+                      "path": "/api/v1/...",
+                      "error": "Conflict",
+                      "message": "{data} exists, Please try again!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "500 Response": {
+                    "summary": "Handle exception when internal server error",
+                    "description": "500 Response",
+                    "value": {
+                      "timestamp": "2023-10-19T06:35:52.333+00:00",
+                      "status": 500,
+                      "path": "/api/v1/...",
+                      "error": "Internal Server Error",
+                      "message": "Connection timeout, please try again"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/": {
+      "post": {
+        "tags": [
+          "User Controller"
+        ],
+        "summary": "Add user",
+        "description": "API create new user",
+        "operationId": "addUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDataInteger"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Handle exception when the data invalid. (@RequestBody, @RequestParam, @PathVariable)": {
+                    "summary": "Handle Bad Request",
+                    "description": "Handle exception when the data invalid. (@RequestBody, @RequestParam, @PathVariable)",
+                    "value": {
+                      "timestamp": "2024-04-07T11:38:56.368+00:00",
+                      "status": 400,
+                      "path": "/api/v1/...",
+                      "error": "Invalid Payload",
+                      "message": "{data} must be not blank"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "404 Response": {
+                    "summary": "Handle exception when resource not found",
+                    "description": "404 Response",
+                    "value": {
+                      "timestamp": "2023-10-19T06:07:35.321+00:00",
+                      "status": 404,
+                      "path": "/api/v1/...",
+                      "error": "Not Found",
+                      "message": "{data} not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "409 Response": {
+                    "summary": "Handle exception when input data is conflicted",
+                    "description": "409 Response",
+                    "value": {
+                      "timestamp": "2023-10-19T06:07:35.321+00:00",
+                      "status": 409,
+                      "path": "/api/v1/...",
+                      "error": "Conflict",
+                      "message": "{data} exists, Please try again!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "500 Response": {
+                    "summary": "Handle exception when internal server error",
+                    "description": "500 Response",
+                    "value": {
+                      "timestamp": "2023-10-19T06:35:52.333+00:00",
+                      "status": 500,
+                      "path": "/api/v1/...",
+                      "error": "Internal Server Error",
+                      "message": "Connection timeout, please try again"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/list": {
+      "get": {
+        "tags": [
+          "User Controller"
+        ],
+        "summary": "Get user list per page",
+        "description": "API return user by pageNo and pageSize",
+        "operationId": "getAllUser",
+        "parameters": [
+          {
+            "name": "pageNo",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "minimum": 10,
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDataListUserRequestDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Handle exception when the data invalid. (@RequestBody, @RequestParam, @PathVariable)": {
+                    "summary": "Handle Bad Request",
+                    "description": "Handle exception when the data invalid. (@RequestBody, @RequestParam, @PathVariable)",
+                    "value": {
+                      "timestamp": "2024-04-07T11:38:56.368+00:00",
+                      "status": 400,
+                      "path": "/api/v1/...",
+                      "error": "Invalid Payload",
+                      "message": "{data} must be not blank"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "404 Response": {
+                    "summary": "Handle exception when resource not found",
+                    "description": "404 Response",
+                    "value": {
+                      "timestamp": "2023-10-19T06:07:35.321+00:00",
+                      "status": 404,
+                      "path": "/api/v1/...",
+                      "error": "Not Found",
+                      "message": "{data} not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "409 Response": {
+                    "summary": "Handle exception when input data is conflicted",
+                    "description": "409 Response",
+                    "value": {
+                      "timestamp": "2023-10-19T06:07:35.321+00:00",
+                      "status": 409,
+                      "path": "/api/v1/...",
+                      "error": "Conflict",
+                      "message": "{data} exists, Please try again!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "500 Response": {
+                    "summary": "Handle exception when internal server error",
+                    "description": "500 Response",
+                    "value": {
+                      "timestamp": "2023-10-19T06:35:52.333+00:00",
+                      "status": 500,
+                      "path": "/api/v1/...",
+                      "error": "Internal Server Error",
+                      "message": "Connection timeout, please try again"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Address": {
+        "type": "object",
+        "properties": {
+          "apartmentNumber": {
+            "type": "string"
+          },
+          "floor": {
+            "type": "string"
+          },
+          "building": {
+            "type": "string"
+          },
+          "streetNumber": {
+            "type": "string"
+          },
+          "street": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "addressType": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UserRequestDTO": {
+        "required": [
+          "addresses",
+          "dateOfBirth",
+          "firstName",
+          "lastName",
+          "password",
+          "type",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "male",
+              "female",
+              "other"
+            ]
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "addresses": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Address"
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "inactive",
+              "none"
+            ]
+          }
+        }
+      },
+      "ResponseDataObject": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "ResponseDataInteger": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ResponseDataUserRequestDTO": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/UserRequestDTO"
+          }
+        }
+      },
+      "ResponseDataListUserRequestDTO": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserRequestDTO"
+            }
+          }
+        }
+      }
+    }
+  }
+}

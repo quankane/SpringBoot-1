@@ -1,11 +1,11 @@
-package group.quankane.util;
+package group.quankane.dto.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 import java.lang.annotation.Annotation;
 
-public class PhoneValidator implements ConstraintValidator<PhoneNumber, String> {
+public class PhoneNumberValidator implements ConstraintValidator<PhoneNumber, String> {
     @Override
     public void initialize(PhoneNumber phoneNumberNo) {
 
@@ -18,7 +18,7 @@ public class PhoneValidator implements ConstraintValidator<PhoneNumber, String> 
         }
         //validate phone number of format "0123456789"
         if(phoneNo.matches("\\d{10}")) return true;
-        //validate phone number with -, . or spaces: 090-234-4567
+            //validate phone number with -, . or spaces: 090-234-4567
         else if(phoneNo.matches("\\d{3}[-\\.\\s]\\d{3}[-\\.\\s]\\d{4}")) return true;
             //validating phone number with extension length from 3 to 5
         else //return false if nothing matches the input

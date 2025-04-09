@@ -1,4 +1,4 @@
-package group.quankane.util;
+package group.quankane.dto.validator;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

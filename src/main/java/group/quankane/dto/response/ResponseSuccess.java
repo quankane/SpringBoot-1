@@ -1,48 +1,54 @@
 package group.quankane.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
 public class ResponseSuccess extends ResponseEntity<ResponseSuccess.Payload> {
-    //PUT, PATCH, DELETE
-    public ResponseSuccess(HttpStatusCode status, String message) {
+    public ResponseSuccess(HttpStatus status, String message) {
         super(new Payload(status.value(), message), HttpStatus.OK);
     }
-    //GET lấy dữ liệu trả về cho Client, POST trả lại id cho Client để thực hiện Thêm, Cập nhật, Xóa
-    public ResponseSuccess(HttpStatusCode status, String message, Object data) {
-        super(new Payload(status.value(), message, data), HttpStatus.OK);
+
+    public ResponseSuccess(HttpStatus status, String message, Object data) {
+        super(new Payload(status.value(), message, data), status);
     }
 
+    public ResponseSuccess(Payload body, HttpStatus status) {
+        super(body, status);
+    }
+
+    public ResponseSuccess(MultiValueMap<String, String> headers, HttpStatus status) {
+        super(headers, status);
+    }
+
+    public ResponseSuccess(Payload payload, MultiValueMap<String, String> headers, int rawStatus) {
+        super(payload, headers, rawStatus);
+    }
+
+    public ResponseSuccess(Payload payload, MultiValueMap<String, String> headers, HttpStatus status) {
+        super(payload, headers, status);
+    }
+
+    @Getter
     public static class Payload {
         private final int status;
         private final String message;
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         private Object data;
 
         public Payload(int status, String message) {
-            this.message = message;
             this.status = status;
+            this.message = message;
         }
 
         public Payload(int status, String message, Object data) {
-            this.data = data;
-            this.message = message;
             this.status = status;
-        }
-
-
-        public int getStatus() {
-            return status;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public Object getData() {
-            return data;
+            this.message = message;
+            this.data = data;
         }
     }
 }

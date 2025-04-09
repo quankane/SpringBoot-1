@@ -1,4 +1,4 @@
-package group.quankane.util;
+package group.quankane.dto.validator;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -6,7 +6,7 @@ import jakarta.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = PhoneValidator.class)
+@Constraint(validatedBy = PhoneNumberValidator.class)
 @Target( { ElementType.FIELD, ElementType.METHOD} )
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PhoneNumber {
