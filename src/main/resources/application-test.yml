@@ -1,7 +1,7 @@
 spring:
   config:
     activate:
-      on-profile: test
+      on-profile: dev
 
 springdoc:
   api-docs:
@@ -11,6 +11,6 @@ springdoc:
 openapi:
   service:
     api-docs: api-service
-    server: http://test.api-service.local
+    server: http://localhost:${server.port}
     title: API Document
     version: 1.0.0

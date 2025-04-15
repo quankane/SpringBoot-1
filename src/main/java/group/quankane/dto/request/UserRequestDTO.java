@@ -1,17 +1,21 @@
 package group.quankane.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import group.quankane.util.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
+import group.quankane.dto.validator.*;
+import group.quankane.util.*;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+import static group.quankane.util.Gender.*;
+
 @Getter
 public class UserRequestDTO implements Serializable {
+
     @NotBlank(message = "firstName must be not blank") // Khong cho phep gia tri blank
     private String firstName;
 
@@ -22,6 +26,7 @@ public class UserRequestDTO implements Serializable {
     private String email;
 
     //@Pattern(regexp = "^\\d{10}$", message = "phone invalid format")
+    @PhoneNumber(message = "phone invalid format")
     private String phone;
 
     @NotNull(message = "dateOfBirth must be not null")
@@ -30,6 +35,7 @@ public class UserRequestDTO implements Serializable {
     private Date dateOfBirth;
 
     //@Pattern(regexp = "^male|female|other$", message = "gender must be one in {male, female, other}")
+    @GenderSubset(anyOf = {MALE, FEMALE, OTHER})
     private Gender gender;
 
     @NotNull(message = "username must be not null")
@@ -39,11 +45,13 @@ public class UserRequestDTO implements Serializable {
     private String password;
 
     @NotNull(message = "type must be not null")
+    @EnumValue(name = "type", enumClass = UserType.class)
     private String type;
 
     @NotEmpty(message = "addresses can not empty")
-    private Set<Address> addresses;
+    private Set<AddressDTO> addresses;
 
+    @EnumPattern(name = "status", regexp = "ACTIVE|INACTIVE|NONE")
     private UserStatus status;
 
     public UserRequestDTO(String firstName, String lastName, String email, String phone) {
@@ -51,17 +59,5 @@ public class UserRequestDTO implements Serializable {
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
-    }
-
-    @Getter
-    public static class Address {
-        private String apartmentNumber;
-        private String floor;
-        private String building;
-        private String streetNumber;
-        private String street;
-        private String city;
-        private String country;
-        private Integer addressType;
     }
 }

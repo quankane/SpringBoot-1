@@ -3,12 +3,14 @@ package group.quankane.dto.validator;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-import java.lang.annotation.Annotation;
 
 public class PhoneNumberValidator implements ConstraintValidator<PhoneNumber, String> {
     @Override
     public void initialize(PhoneNumber phoneNumberNo) {
-
+        // This method is empty because no specific initialization is needed for phone number validation.
+        // Typically, this method can be used to perform any setup or resource allocation
+        // if required by the validator. In this case, the validation logic is straightforward
+        // and does not require any pre-validation setup, so we leave it empty
     }
 
     @Override

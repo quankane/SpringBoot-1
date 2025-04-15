@@ -1,5 +1,6 @@
 package group.quankane.dto.validator;
 
+import group.quankane.util.UserType;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -12,7 +13,7 @@ import java.lang.annotation.*;
 public @interface EnumValue {
     String name();
     String message() default "{name} must be any of enum {enumClass}";
-    Class<? extends Enum<?>> enumClass();
+    Class<? extends Enum<UserType>> enumClass();
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
