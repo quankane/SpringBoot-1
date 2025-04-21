@@ -39,5 +39,5 @@ public class Address extends AbstractEntity {
     private User user;
 
     @Column(name = "address_type")
-    private String addressType;
+    private Integer addressType;
 }

@@ -1,11 +1,17 @@
 package group.quankane.service.impl;
 
+import group.quankane.repository.specification.UserSpecificationBuilder;
+import group.quankane.service.MailService;
+import group.quankane.util.AppConstants;
+import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import group.quankane.dto.request.AddressDTO;
@@ -21,10 +27,9 @@ import group.quankane.service.UserService;
 import group.quankane.util.UserStatus;
 import group.quankane.util.UserType;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.beans.Transient;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,9 +42,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final SearchRepository searchRepository;
+    private final MailService mailService;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Override
-    public long saveUser(UserRequestDTO request) {
+    @Transactional(rollbackOn = Exception.class)
+    public long saveUser(UserRequestDTO request) throws MessagingException, UnsupportedEncodingException {
         User user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
@@ -61,12 +69,17 @@ public class UserServiceImpl implements UserService {
                         .street(a.getStreet())
                         .city(a.getCity())
                         .country(a.getCountry())
-                        .addressType(a.getAddressType())
+                        .addressType(Integer.valueOf(a.getAddressType()))
                         .build()));
 
-        userRepository.save(user);
+        User result = userRepository.save(user);
 
-        log.info("User has save!");
+        log.info("User has saved!");
+
+        if (result != null) {
+//            mailService.sendConfirmLink(user.getEmail(), user.getId(), "code@123");
+            kafkaTemplate.send("confirm-account-topic", String.format("email=%s,id=%s,code=%s", user.getEmail(), user.getId(), "code@123"));
+        }
 
         return user.getId();
     }
@@ -104,6 +117,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(long userId) {
         userRepository.deleteById(userId);
+    }
+
+    @Override
+    public String confirmUser(int userId, String verifyCode) {
+        return "Confirmed";
     }
 
     @Override
@@ -151,9 +169,9 @@ public class UserServiceImpl implements UserService {
                 .phone(user.getPhone())
                 .build()).toList();
         return PageResponse.<List<UserDetailResponse>>builder()
-                .pageNo(pageNo)
-                .pageSize(pageSize)
-                .totalPage(users.getTotalPages())
+                .page(pageNo)
+                .size(pageSize)
+                .total(users.getTotalPages())
                 .items(response)
                 .build();
     }
@@ -194,9 +212,9 @@ public class UserServiceImpl implements UserService {
                 .phone(user.getPhone())
                 .build()).toList();
         return PageResponse.<List<UserDetailResponse>>builder()
-                .pageNo(pageNo)
-                .pageSize(pageSize)
-                .totalPage(users.getTotalPages())
+                .page(pageNo)
+                .size(pageSize)
+                .total(users.getTotalPages())
                 .items(response)
                 .build();
     }
@@ -211,6 +229,28 @@ public class UserServiceImpl implements UserService {
         return searchRepository.searchUserByCriteria(pageNo, pageSize, sortBy, address, search);
     }
 
+    @Override
+    public PageResponse<Object> advanceSearchWithSpecifications(Pageable pageable, String[] user, String[] address) {
+        if (user != null && address != null) {
+            return searchRepository.searchUserByCriteriaWithJoin(pageable, user, address);
+        } else if (user != null) {
+            UserSpecificationBuilder builder = new UserSpecificationBuilder();
+
+            Pattern pattern = Pattern.compile(AppConstants.SEARCH_SPEC_OPERATOR);
+            for (String s : user) {
+                Matcher matcher = pattern.matcher(s);
+                if (matcher.find()) {
+                    builder.with(matcher.group(1), matcher.group(2), matcher.group(3), matcher.group(4), matcher.group(5));
+                }
+            }
+
+            Page<User> users = userRepository.findAll(Objects.requireNonNull(builder.build()), pageable);
+            return convertToPageResponse(users, pageable);
+        }
+        return convertToPageResponse(userRepository.findAll(pageable), pageable);
+
+    }
+
     private Set<Address> convertToAddress(Set<AddressDTO> addresses) {
         Set<Address> result = new HashSet<>();
         addresses.forEach(a ->
@@ -222,7 +262,7 @@ public class UserServiceImpl implements UserService {
                         .street(a.getStreet())
                         .city(a.getCity())
                         .country(a.getCountry())
-                        .addressType(a.getAddressType())
+                        .addressType(Integer.valueOf(a.getAddressType()))
                         .build())
         );
         return result;
@@ -230,5 +270,28 @@ public class UserServiceImpl implements UserService {
 
     private User getUserById(long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    }
+
+    /**
+     * Convert Page<User> to PageResponse
+     *
+     * @param users
+     * @param pageable
+     * @return
+     */
+    private PageResponse<Object> convertToPageResponse(Page<User> users, Pageable pageable) {
+        List<UserDetailResponse> responses = users.stream().map(user -> UserDetailResponse.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .build()).toList();
+        return PageResponse.builder()
+                .page(pageable.getPageNumber())
+                .size(pageable.getPageSize())
+                .total(users.getTotalPages())
+                .items(responses)
+                .build();
     }
 }

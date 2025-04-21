@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -67,6 +68,20 @@ public class UserController {
         } catch (Exception e) {
             log.error(ERROR_MESSAGE, e.getMessage(), e.getCause());
             return new ResponseError<>(HttpStatus.BAD_REQUEST.value(), "Change status fail");
+        }
+    }
+
+    @Operation(summary = "Confirm user", description = "Send a request via this API to confirm user")
+    @GetMapping("/confirm/{userId}")
+    public ResponseData<String> confirm(@Min(1) @PathVariable int userId, @RequestParam String verifyCode) {
+        log.info("Confirm user, userId={}, verifyCode={}", userId, verifyCode);
+
+        try {
+            userService.confirmUser(userId, verifyCode);
+            return new ResponseData<>(HttpStatus.ACCEPTED.value(), "User has confirmed successfully");
+        } catch (Exception e) {
+            log.error("errorMessage={}", e.getMessage(), e.getCause());
+            return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Confirm was failed");
         }
     }
 
@@ -167,5 +182,18 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "Advance search query by specifications", description = "Return list of users")
+    @GetMapping(path = "/advance-search-with-specification")
+    public ResponseData<?> advanceSearchWithSpecifications(Pageable pageable,
+                                                           @RequestParam(required = false) String[] user,
+                                                           @RequestParam(required = false) String[] address) {
+        log.info("Request get all of users with sort by column and search");
 
+        try {
+            return new ResponseData<>(HttpStatus.OK.value(), "users", userService.advanceSearchWithSpecifications(pageable, user, address));
+        } catch (Exception e) {
+            log.error(ERROR_MESSAGE, e.getMessage(), e.getCause());
+            return new ResponseError<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+        }
+    }
 }
