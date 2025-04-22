@@ -5,7 +5,7 @@ spring:
   devtools:
     add-properties: true
   datasource:
-    url: ${POSTGRES_URL:jdbc:postgresql://postgres:5432/postgres}
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/postgres}
     username: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASSWORD:password}
   jpa:
@@ -28,5 +28,5 @@ openapi:
   service:
     api-docs: api-service
     server: http://localhost:${server.port}
-    title: ${API_TITLE:DUMMY-API}
+    title: API Document
     version: 1.0.0

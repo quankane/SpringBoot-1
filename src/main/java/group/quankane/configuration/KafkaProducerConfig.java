@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@Slf4j (topic = "KAFKA-PRODUCER")
+@Slf4j
 public class KafkaProducerConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")
